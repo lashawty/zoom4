@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      padding-top: 50px;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .moveBar {
+      position: absolute;
+      width: 250px;
+      height: 300px;
+      background: #666;
+      border: solid 1px #000;
+    }
+
+    .content{
+      color: white;
+    }
+
+    #banner {
+      background: #52CCCC;
+      cursor: move;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="moveBar">
+    <div id="banner">按住此處移動當前div</div>
+    <div class="content">
+      <div class="left"></div>
+      <div class="top"></div>
+    </div>
+  </div>
+  <div class="footer">
+    <p align="center" class="label">ALL Rights Reserved Qing 版權所有</p>
+  </div>
+
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+  <script>
+    jQuery(document).ready(
+      function () {
+        var canTouchStart = ('ontouchstart' in document.documentElement)  ? 'touchstart' : 'mousedown';
+        var canTouchEnd = ('ontouchend' in document.documentElement)  ? 'touchend' : 'mouseup';
+        var canTouchMove = ('ontouchmove' in document.documentElement)  ? 'touchmove' : 'mousemove';
+        var isMove
+        $('#banner').on(canTouchStart,function(event){
+          isMove = true
+          var abs_x = canTouchStart == 'touchstart' ? event.originalEvent.targetTouches[0].pageX - $('div.moveBar').offset().left : event.pageX - $('div.moveBar').offset().left
+          var abs_y = canTouchStart == 'touchstart' ? event.originalEvent.targetTouches[0].pageY - $('div.moveBar').offset().top : event.pageY - $('div.moveBar').offset().top
+          $(document).on(canTouchMove,function(event){
+            if (isMove) {
+              var obj = $('div.moveBar');
+              if(canTouchMove == 'touchmove'){
+                obj.css({
+                'left': event.originalEvent.targetTouches[0].pageX - abs_x,
+                'top':  event.originalEvent.targetTouches[0].pageY - abs_y
+                });
+                obj.find('.content .left').text('Left: ' + String(event.originalEvent.targetTouches[0].pageX - abs_x) + 'px')
+                obj.find('.content .top').text('Top: ' + String(event.originalEvent.targetTouches[0].pageY - abs_y) + 'px')
+              }
+              else{
+                obj.css({
+                'left': event.pageX - abs_x,
+                'top': event.pageY - abs_y
+                });
+                obj.find('.content .left').text('Left: ' + String(event.pageX - abs_x) + 'px')
+                obj.find('.content .top').text('Top: ' + String(event.pageY - abs_y) + 'px')
+              }
+            }
+          })
+        });
+        $('#banner').on(canTouchEnd,function(){
+          isMove = false;
+        })
+      }
+    );
+  </script>
+</body>
+</html>
