@@ -1,0 +1,24 @@
+{
+  "name": "zoom4",
+  "version": "1.0.0",
+  "description": "* 先閱讀及理解 panzoom 的 code\r * 同時簡易實作多樣功能\r * 目前想到的功能: \r     - [ ]     1.範圍內拖曳(優先開發)\r     - [ ]     2.滾輪縮放\r     - [ ]     3.點擊物件產生邊界(依使用者需求等比例、不等比例縮放)",
+  "main": "app-dist.js",
+  "author" "Sean",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lashawty/zoom4.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lashawty/zoom4/issues"
+  },
+  "homepage": "https://github.com/lashawty/zoom4#readme",
+  "dependencies": {
+    "panzoom": "^9.4.3"
+  }
+}
