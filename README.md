@@ -10,7 +10,7 @@
     - [ ]     3.範圍內拖曳(超過父層卡住or擋住)
 
 * 參考功能連結：[Panzoom DEMO](https://timmywil.com/panzoom/demo/)
-
+* 開發網頁連結：[Develope DEMO](https://lashawty.github.io/zoom4/)
 
 
 ###### tags: zoom4
