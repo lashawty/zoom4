@@ -8,7 +8,10 @@ html(lang="en")
     link(href="style.css", rel="stylesheet")
     
   body
-    .test(id="panzoom-element")
-    .test2 使用滾輪縮放
+    zoom-element(option="drag")
+      .content 
+      .left left 0 px
+      .top top 0 px
+    .test2 點擊回復原狀
     script(src="app-dist.js")
-    
+    script(src="zoom4-dist.js")

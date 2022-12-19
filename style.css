@@ -1,8 +1,35 @@
-.test {
+zoom-element {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   margin: 0 auto;
   width: 300px;
   height: 300px;
   background: red;
+  position: relative;
+}
+zoom-element .content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  background: #000;
+}
+zoom-element .left, zoom-element .top {
+  font-size: 30px;
+  color: #fff;
+  text-align: center;
 }
 
 .test2 {
