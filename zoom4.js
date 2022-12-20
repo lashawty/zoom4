@@ -13,8 +13,8 @@ class Zoom4 extends HTMLElement {
           this.onwheel = (e) => {this.zoom(e)}
           this.resetZoom()
           break;
-        case 'drag' :
-          this.drag()
+        case 'move' :
+          this.move()
           break;
       }
     } else {
@@ -48,32 +48,43 @@ class Zoom4 extends HTMLElement {
       })
   }
 
-  drag(){
+  move(){
+    // create a new div element
+    const newDiv = document.createElement('div');
+    this.appendChild(newDiv);
+    newDiv.className = 'move-element'
+    
     const canTouchStart = ('ontouchstart' in document.documentElement)  ? 'touchstart' : 'mousedown';
     const canTouchEnd = ('ontouchend' in document.documentElement)  ? 'touchend' : 'mouseup';
     const canTouchMove = ('ontouchmove' in document.documentElement)  ? 'touchmove' : 'mousemove';
-    const obj = this.querySelector('.content')
+    const obj = this.querySelector('.move-element')
     const $left = this.querySelector('.left')
     const $top = this.querySelector('.top')
+    $left.innerHTML = `Left ${obj.offsetLeft} px`
+    $top.innerHTML = `Top ${obj.offsetTop} px`
+    const self = this
+    const rect = self.getBoundingClientRect()
     let isMove
-    obj.addEventListener(canTouchStart, function(event){
-
+    let abs_x
+    let abs_y
+    let originalPageX = obj.getBoundingClientRect().x
+    this.addEventListener(canTouchStart, function(event){
+      event.preventDefault()
       isMove = true
-
-      let abs_x
+      //抓取子元素原本的位置
       if (canTouchStart == 'touchstart') {
         abs_x = event.originalEvent.targetTouches[0].pageX - obj.offsetLeft;
       } else {
-        abs_x = event.pageX - obj.offsetLeft;
+        abs_x = event.pageX - obj.offsetLeft
+        abs_y = event.pageY - obj.offsetTop
       }
-
-      let abs_y
-      if (canTouchStart == 'touchstart') {
-        abs_y = event.originalEvent.targetTouches[0].pageY - obj.offsetTop;
-      } else {
-        abs_y = event.pageY- obj.offsetTop;
-      }
-      console.log(isMove,'1');
+      
+      // if (canTouchStart == 'touchstart') {
+      //   abs_y = event.originalEvent.targetTouches[0].pageY - obj.offsetTop;
+      // } else {
+      //   abs_y = event.pageY - obj.offsetTop
+      // }
+      
       obj.addEventListener(canTouchMove,function(event){
         if (isMove) {
           if(canTouchMove == 'touchmove') {
@@ -81,23 +92,42 @@ class Zoom4 extends HTMLElement {
             obj.style.top = event.originalEvent.targetTouches[0].pageY - abs_y
             $left.innerHTML = `${obj.style.left}`
             $top.innerHTML = `${obj.style.top}`
-            console.log(isMove,'2');
           } else {
-            obj.style.left = event.pageX - abs_x
-            obj.style.top = event.pageY - abs_y
-            $left.innerHTML = `LEFT ${obj.style.left} `
-            $top.innerHTML = `TOP ${obj.style.top}`
-            console.log(isMove, '3');
+            let distanceX = event.pageX - abs_x
+            let distanceY = event.pageY - abs_y
+
+            //以下為判斷是否超出父層
+            // if (distanceX > self.offsetWidth - obj.offsetWidth) {
+            //   distanceX = self.offsetWidth - obj.offsetWidth
+            // } else if(distanceX < 0) {
+            //   distanceX = 0
+            // }
+            // if (distanceY > self.offsetHeight - obj.offsetHeight) {
+            //   distanceX = self.offsetHeight - obj.offsetHeight
+            // } else if(distanceY < 0) {
+            //   distanceY = 0
+            // }
+            
+            obj.style.left = `${ distanceX }px`
+            obj.style.top = `${ distanceY }px`
+            $left.innerHTML = `Left ${obj.style.left} px`
+            $top.innerHTML = `Top ${obj.style.left} px`
           }
         }
     })
+      
+    })
+    this.addEventListener('mouseleave', function () {
+      console.log('mouseleave');
+      isMove = false
     })
     this.addEventListener(canTouchEnd, function () {
+      console.log('mouseup');
       isMove = false
-      console.log(isMove,'4');
     })
-    
+  
   }
+
 }
 
 customElements.define('zoom-element', Zoom4);

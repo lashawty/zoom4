@@ -1,2 +1,2 @@
-!function(){let t=1;const e=document.querySelector(".test2");e.onwheel=function(n){n.preventDefault(),t+=-.01*n.deltaY,t=Math.min(Math.max(.125,t),4),e.style.transform=`scale(${t})`}}();
+
 //# sourceMappingURL=app-dist.js.map

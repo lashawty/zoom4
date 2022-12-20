@@ -56,7 +56,7 @@
         var canTouchEnd = ('ontouchend' in document.documentElement)  ? 'touchend' : 'mouseup';
         var canTouchMove = ('ontouchmove' in document.documentElement)  ? 'touchmove' : 'mousemove';
         var isMove
-        $('#banner').on(canTouchStart,function(event){
+        $('.banner').on(canTouchStart,function(event){
           isMove = true
           var abs_x = canTouchStart == 'touchstart' ? event.originalEvent.targetTouches[0].pageX - $('div.moveBar').offset().left : event.pageX - $('div.moveBar').offset().left
           var abs_y = canTouchStart == 'touchstart' ? event.originalEvent.targetTouches[0].pageY - $('div.moveBar').offset().top : event.pageY - $('div.moveBar').offset().top
@@ -82,7 +82,7 @@
             }
           })
         });
-        $('#banner').on(canTouchEnd,function(){
+        $('.banner').on(canTouchEnd,function(){
           isMove = false;
         })
       }

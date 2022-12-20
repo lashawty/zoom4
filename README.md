@@ -1,7 +1,6 @@
 # ZOOM4 開發紀錄
-- 12/19
-- 滾輪縮放demo + web component demo ok
-- 拖曳需要重算容器內寬高
+- 12/20
+- 滾輪縮放demo + 拖曳demo
 ## 最後編輯：2022.12.16 by Sean
 ### 開發流程規劃
 

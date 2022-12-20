@@ -8,10 +8,10 @@ html(lang="en")
     link(href="style.css", rel="stylesheet")
     
   body
-    zoom-element(option="drag")
-      .content 
-      .left left 0 px
-      .top top 0 px
-    .test2 點擊回復原狀
+    zoom-element(option="move")
+      //開發完成後將下方left top及相關js移除
+      .left 
+      .top 
+    zoom-element.test2(option="zoom") 使用滾輪縮放
     script(src="app-dist.js")
     script(src="zoom4-dist.js")

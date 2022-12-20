@@ -8,12 +8,12 @@
     <link href="style.css" rel="stylesheet">
   </head>
   <body>
-    <zoom-element option="drag">
-      <div class="content"> </div>
-      <div class="left">left 0 px</div>
-      <div class="top">top 0 px</div>
+    <zoom-element option="move">
+      <!--開發完成後將下方left top及相關js移除-->
+      <div class="left"> </div>
+      <div class="top"> </div>
     </zoom-element>
-    <div class="test2">點擊回復原狀</div>
+    <zoom-element class="test2" option="zoom">使用滾輪縮放</zoom-element>
     <script src="app-dist.js"></script>
     <script src="zoom4-dist.js"></script>
   </body>
