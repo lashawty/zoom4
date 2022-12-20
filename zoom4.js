@@ -63,11 +63,9 @@ class Zoom4 extends HTMLElement {
     $left.innerHTML = `Left ${obj.offsetLeft} px`
     $top.innerHTML = `Top ${obj.offsetTop} px`
     const self = this
-    const rect = self.getBoundingClientRect()
     let isMove
     let abs_x
     let abs_y
-    let originalPageX = obj.getBoundingClientRect().x
     this.addEventListener(canTouchStart, function(event){
       event.preventDefault()
       isMove = true
@@ -88,10 +86,11 @@ class Zoom4 extends HTMLElement {
       obj.addEventListener(canTouchMove,function(event){
         if (isMove) {
           if(canTouchMove == 'touchmove') {
-            obj.style.left = event.originalEvent.targetTouches[0].pageX - abs_x
-            obj.style.top = event.originalEvent.targetTouches[0].pageY - abs_y
-            $left.innerHTML = `${obj.style.left}`
-            $top.innerHTML = `${obj.style.top}`
+            let distanceX = event.originalEvent.targetTouches[0].pageX - abs_x
+            let distanceY = event.originalEvent.targetTouches[0].pageY - abs_y
+            obj.style.left = `${ distanceX }px`
+            obj.style.top = `${ distanceY }px`
+            
           } else {
             let distanceX = event.pageX - abs_x
             let distanceY = event.pageY - abs_y
@@ -110,10 +109,10 @@ class Zoom4 extends HTMLElement {
             
             obj.style.left = `${ distanceX }px`
             obj.style.top = `${ distanceY }px`
-            $left.innerHTML = `Left ${obj.style.left} px`
-            $top.innerHTML = `Top ${obj.style.left} px`
           }
         }
+        $left.innerHTML = `${obj.style.left}`
+        $top.innerHTML = `${obj.style.top}`
     })
       
     })
