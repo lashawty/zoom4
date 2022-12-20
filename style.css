@@ -46,3 +46,13 @@ zoom-element .top {
   color: #fff;
   text-align: center;
 }
+
+.btn {
+  margin: 20px auto 0 auto;
+  width: 180px;
+  height: 50px;
+  border: 1px solid black;
+  background: #fff;
+  color: #000;
+  text-align: center;
+}

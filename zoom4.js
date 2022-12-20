@@ -15,6 +15,7 @@ class Zoom4 extends HTMLElement {
           break;
         case 'move' :
           this.move()
+          this.resetMove()
           break;
       }
     } else {
@@ -40,12 +41,12 @@ class Zoom4 extends HTMLElement {
   }
 
   resetZoom() {
-      const btn = document.querySelector('.test2')
-      const zoomElement = document.querySelector('zoom-element')
-      btn.addEventListener('click', function () {
-        zoomElement.scale = 1;
-        zoomElement.style.transform = `scale(1)`;
-      })
+    const btn = this.querySelector('.btn')
+    const self = this
+    btn.addEventListener('click', function () {
+      self.scale = 1;
+      self.style.transform = `scale(1)`;
+    })
   }
 
   move(){
@@ -122,6 +123,17 @@ class Zoom4 extends HTMLElement {
   
   }
 
+  resetMove() {
+    const btn = this.querySelector('.btn')
+    const moveElement = this.querySelector('.move-element')
+    const originalLeft = moveElement.offsetLeft
+    const originalTop = moveElement.offsetTop
+    console.log(originalLeft, originalTop);
+    btn.addEventListener('click', function () {
+      moveElement.style.left = `${ originalLeft }px`
+      moveElement.style.top = `${ originalTop }px`
+    })
+  }
 }
 
 customElements.define('zoom-element', Zoom4);
