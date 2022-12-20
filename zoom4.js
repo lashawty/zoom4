@@ -49,7 +49,6 @@ class Zoom4 extends HTMLElement {
   }
 
   move(){
-    // create a new div element
     const newDiv = document.createElement('div');
     this.appendChild(newDiv);
     newDiv.className = 'move-element'
@@ -72,22 +71,18 @@ class Zoom4 extends HTMLElement {
       //抓取子元素原本的位置
       if (canTouchStart == 'touchstart') {
         abs_x = event.originalEvent.targetTouches[0].pageX - obj.offsetLeft;
+        abs_y = event.originalEvent.targetTouches[0].pageY - obj.offsetTop;
       } else {
         abs_x = event.pageX - obj.offsetLeft
         abs_y = event.pageY - obj.offsetTop
       }
-      
-      // if (canTouchStart == 'touchstart') {
-      //   abs_y = event.originalEvent.targetTouches[0].pageY - obj.offsetTop;
-      // } else {
-      //   abs_y = event.pageY - obj.offsetTop
-      // }
       
       obj.addEventListener(canTouchMove,function(event){
         if (isMove) {
           if(canTouchMove == 'touchmove') {
             let distanceX = event.originalEvent.targetTouches[0].pageX - abs_x
             let distanceY = event.originalEvent.targetTouches[0].pageY - abs_y
+
             obj.style.left = `${ distanceX }px`
             obj.style.top = `${ distanceY }px`
             
