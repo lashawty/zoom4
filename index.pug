@@ -8,13 +8,10 @@ html(lang="en")
     link(href="style.css", rel="stylesheet")
     
   body
-    zoom-element(option="move")
+    zoom-element.test1(option="move" boundary="hide" reset-button="has-button") 點擊白色區塊Reset
       //開發完成後將下方left top及相關js移除
       .left 
       .top
-      .btn RESET
-    zoom-element.test2(option="zoom") 使用滾輪縮放
-
-      .btn RESET
+    zoom-element.test2(option="zoom" reset-button="has-button") 使用滾輪縮放，點擊白色區塊Reset
     script(src="app-dist.js")
     script(src="zoom4-dist.js")

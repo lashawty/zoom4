@@ -10,12 +10,16 @@ class Zoom4 extends HTMLElement {
       let optionValue = this.getAttribute('option')
       switch (optionValue) {
         case 'zoom':
-          this.onwheel = (e) => {this.zoom(e)}
-          this.resetZoom()
+          this.zoom()
+          if(this.getAttribute('reset-button') == "has-button" ) {
+            this.resetZoom()
+          }
           break;
         case 'move' :
           this.move()
-          this.resetMove()
+          if(this.getAttribute('reset-button') == "has-button" ) {
+            this.resetMove()
+          }
           break;
       }
     } else {
@@ -29,43 +33,64 @@ class Zoom4 extends HTMLElement {
     console.log('removed');
   }
 
-  zoom(e) {
-    e.preventDefault();
-
-    this.scale += e.deltaY * -0.01;
-
-    // Restrict scale
-    this.scale = Math.min(Math.max(.125, this.scale), 4);
-    // Apply scale transform
-    this.style.transform = `scale(${this.scale})`;
+  zoom() {
+    const scaleElement = document.createElement('div')
+    this.appendChild(scaleElement)
+    scaleElement.className = 'scale-element'
+    scaleElement.scale = 1;
+    scaleElement.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      this.scale += e.deltaY * -0.01;
+      // Restrict scale
+      this.scale = Math.min(Math.max(.125,this.scale), 10);
+      // Apply scale transform
+      this.style.transform = `scale(${this.scale})`;
+    })
+    
   }
 
   resetZoom() {
-    const btn = this.querySelector('.btn')
-    const self = this
+    const btn = document.createElement('div')
+    this.appendChild(btn)
+    btn.className = 'zoom-reset'
+    const scaleElement = this.querySelector('.scale-element')
     btn.addEventListener('click', function () {
-      self.scale = 1;
-      self.style.transform = `scale(1)`;
+      scaleElement.scale = 1;
+      scaleElement.style.transform = `scale(1)`;
     })
   }
 
   move(){
+    //產出一個move-element
     const newDiv = document.createElement('div');
     this.appendChild(newDiv);
     newDiv.className = 'move-element'
     
+    //宣告
     const canTouchStart = ('ontouchstart' in document.documentElement)  ? 'touchstart' : 'mousedown';
     const canTouchEnd = ('ontouchend' in document.documentElement)  ? 'touchend' : 'mouseup';
     const canTouchMove = ('ontouchmove' in document.documentElement)  ? 'touchmove' : 'mousemove';
     const obj = this.querySelector('.move-element')
-    const $left = this.querySelector('.left')
-    const $top = this.querySelector('.top')
-    $left.innerHTML = `Left ${obj.offsetLeft} px`
-    $top.innerHTML = `Top ${obj.offsetTop} px`
     const self = this
     let isMove
     let abs_x
     let abs_y
+    let distanceX
+    let distanceY
+    let isBoundary = false
+    //boundary判斷
+    if (this.hasAttribute('boundary') && this.getAttribute('boundary') == 'inside') {
+      isBoundary = true
+    }
+    if (this.getAttribute('boundary') == 'hide') {
+      this.style.overflow = 'hidden'
+    }
+    //以下宣告為測試用
+    const $left = this.querySelector('.left')
+    const $top = this.querySelector('.top')
+    $left.innerHTML = `Left ${obj.offsetLeft} px`
+    $top.innerHTML = `Top ${obj.offsetTop} px`
+    
     this.addEventListener(canTouchStart, function(event){
       event.preventDefault()
       isMove = true
@@ -79,39 +104,42 @@ class Zoom4 extends HTMLElement {
       }
       
       obj.addEventListener(canTouchMove,function(event){
+        
+
         if (isMove) {
           if(canTouchMove == 'touchmove') {
-            let distanceX = event.originalEvent.targetTouches[0].pageX - abs_x
-            let distanceY = event.originalEvent.targetTouches[0].pageY - abs_y
-
-            obj.style.left = `${ distanceX }px`
-            obj.style.top = `${ distanceY }px`
-            
+            distanceX = event.originalEvent.targetTouches[0].pageX - abs_x
+            distanceY = event.originalEvent.targetTouches[0].pageY - abs_y
           } else {
-            let distanceX = event.pageX - abs_x
-            let distanceY = event.pageY - abs_y
-
-            //以下為判斷是否超出父層
-            // if (distanceX > self.offsetWidth - obj.offsetWidth) {
-            //   distanceX = self.offsetWidth - obj.offsetWidth
-            // } else if(distanceX < 0) {
-            //   distanceX = 0
-            // }
-            // if (distanceY > self.offsetHeight - obj.offsetHeight) {
-            //   distanceX = self.offsetHeight - obj.offsetHeight
-            // } else if(distanceY < 0) {
-            //   distanceY = 0
-            // }
-            
-            obj.style.left = `${ distanceX }px`
-            obj.style.top = `${ distanceY }px`
+            distanceX = event.pageX - abs_x
+            distanceY = event.pageY - abs_y
           }
         }
-        $left.innerHTML = `${obj.style.left}`
-        $top.innerHTML = `${obj.style.top}`
+
+        //限制在容器內移動
+        if(isBoundary) {
+          if (distanceX > self.offsetWidth - obj.offsetWidth) {
+            distanceX = self.offsetWidth - obj.offsetWidth
+          } else if( distanceX < 0) {
+            distanceX = 0
+          }
+          if (distanceY > self.offsetHeight - obj.offsetHeight) {
+            distanceY = self.offsetHeight - obj.offsetHeight
+          } else if( distanceY < 0) {
+            distanceY = 0
+          }
+        }
+
+        obj.style.left = `${ distanceX }px`
+        obj.style.top = `${ distanceY }px`
+        //以下為測試用
+        $left.innerHTML = `${ obj.style.left }`
+        $top.innerHTML = `${ obj.style.top }`
     })
       
     })
+
+    //isMove = false
     this.addEventListener('mouseleave', function () {
       console.log('mouseleave');
       isMove = false
@@ -123,12 +151,14 @@ class Zoom4 extends HTMLElement {
   
   }
 
+
   resetMove() {
-    const btn = this.querySelector('.btn')
+    const btn = document.createElement('div')
+    this.appendChild(btn)
+    btn.className = 'zoom-reset'
     const moveElement = this.querySelector('.move-element')
     const originalLeft = moveElement.offsetLeft
     const originalTop = moveElement.offsetTop
-    console.log(originalLeft, originalTop);
     btn.addEventListener('click', function () {
       moveElement.style.left = `${ originalLeft }px`
       moveElement.style.top = `${ originalTop }px`
