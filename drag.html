@@ -90,3 +90,59 @@
   </script>
 </body>
 </html>
+
+<script>
+  let setCenterPos = function() {
+    $('.moveBar').css('transform', `translate(-${($('div.moveBar').innerWidth() - $('.wrap').innerWidth()) / 2}px, -${($('div.moveBar').innerHeight() - $('.wrap').innerHeight()) / 2}px)`)
+  };
+  setCenterPos();
+
+  let oringinPosition = {
+    x: $('.wrap').offset().left,
+    y: $('.wrap').offset().top
+  };
+
+  let max = {
+    x: $('.wrap').innerWidth() - $('div.moveBar').innerWidth(),
+    y: $('.wrap').innerHeight() - $('div.moveBar').innerHeight(),
+  };
+
+  let getPositionX = function(value) {
+    if (value >= 0) return 0
+    else if (max.x > value) return max.x
+    return value
+  };
+
+  let getPositionY = function(value) {
+    if (value >= 0) return 0
+    else if (max.y> value) return max.y
+    return value
+  };
+
+  let init = function() {
+    var canTouchStart = ('ontouchstart' in document.documentElement)  ? 'touchstart' : 'mousedown';
+    var canTouchEnd = ('ontouchend' in document.documentElement)  ? 'touchend' : 'mouseup';
+    var canTouchMove = ('ontouchmove' in document.documentElement)  ? 'touchmove' : 'mousemove';
+    var isMove
+    $('#move').on(canTouchStart, function(event) {
+      isMove = true
+      var abs_x = canTouchStart == 'touchstart' ? event.originalEvent.targetTouches[0].pageX - $('div.moveBar').offset().left : event.pageX - $('div.moveBar').offset().left + oringinPosition.x
+      var abs_y = canTouchStart == 'touchstart' ? event.originalEvent.targetTouches[0].pageY + $('div.moveBar').offset().top : event.pageY - $('div.moveBar').offset().top + oringinPosition.y
+      // var abs_x =+0;
+      // var abs_y = 0;
+      $(document).on(canTouchMove, function(event) {
+        if (isMove) {
+          var obj = $('div.moveBar');
+          if (canTouchMove == 'touchmove')
+            obj.css('transform',`translate(${getPositionX(event.originalEvent.targetTouches[0].pageX - abs_x)}px, ${getPositionY(event.originalEvent.targetTouches[0].pageY - abs_y)}px)`)
+          else
+            obj.css('transform',`translate(${getPositionX(event.pageX - abs_x)}px, ${getPositionY(event.pageY - abs_y)}px)`)
+        }
+      })
+    });
+    $('#move').on(canTouchEnd, function() { isMove = false; })
+  };
+  jQuery(document).ready(
+    init()
+  );
+</script>
