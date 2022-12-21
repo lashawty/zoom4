@@ -14,7 +14,7 @@ class zoom4 extends HTMLElement {
       case 'option':
         // move/scale
         //如果有需要提供使用者改變設定，需另外補判斷，如scale => move
-        if (newVal === "move" || newVal === "scale") {
+        if (newVal === "move" || "scale") {
           this.createDiv(newVal)
           console.log('zoom4 init!!');
         } else {console.error('Must have a value inside zoom-element such as (option="move/scale")')}
@@ -27,6 +27,7 @@ class zoom4 extends HTMLElement {
           case 'move':
             this.move()
             break;
+            
         }
         break;
       
