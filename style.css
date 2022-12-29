@@ -35,6 +35,23 @@ zoom-element .zoom-reset {
           box-sizing: border-box;
 }
 
+body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0;
+}
+
+zoom-element {
+  width: 70%;
+  height: 100vh;
+}
+
+.instructor {
+  width: 30%;
+  height: 100vh;
+}
+
 .left, .top {
   position: fixed;
   bottom: 50px;

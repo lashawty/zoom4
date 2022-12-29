@@ -1,92 +1,85 @@
-// import OPTIONS from './options';
-const options = {}
+import OPTIONS from '/options.js';
 
 class zoom4 extends HTMLElement {
   constructor() {
     super();
   }
   static get observedAttributes() {
-    return ['option', 'boundary', 'reset-button'];
+    return [];
   }
   
   attributeChangedCallback(attr, oldVal, newVal) {
-    switch (attr) {
-      case 'option':
-        // move/scale
-        //如果有需要提供使用者改變設定，需另外補判斷，如scale => move
-        if (newVal === "move" || "scale") {
-          this.createDiv(newVal)
-          console.log('zoom4 init!!');
-        } else {console.error('Must have a value inside zoom-element such as (option="move/scale")')}
+    // switch (attr) {
+    //   case 'option':
+    //     // move/scale
+    //     //如果有需要提供使用者改變設定，需另外補判斷，如scale => move
+    //     if (newVal === "move" || "scale") {
+    //       this.createDiv(newVal)
+    //       console.log('zoom4 init!!');
+    //     } else {console.error('Must have a value inside zoom-element such as (option="move/scale")')}
 
-        switch (newVal) {
-          case 'scale':
-            this.zoom()
-            break;
+    //     switch (newVal) {
+    //       case 'scale':
+    //         this.zoom()
+    //         break;
 
-          case 'move':
-            this.move()
-            break;
+    //       case 'move':
+    //         this.move()
+    //         break;
             
-        }
-        break;
+    //     }
+    //     break;
       
-      case 'boundary':
+    //   case 'boundary':
 
-        switch (newVal) {
-          case 'inside':
-            this.insideBoundary = true
-            if (this.getAttribute('boundary') === 'inside' && this.getAttribute('option') === 'scale') {
-              console.error('you can only choose either "hide" or "free" value inside the boundary attr.')
-            }
-            break;
+    //     switch (newVal) {
+    //       case 'inside':
+    //         this.insideBoundary = true
+    //         if (this.getAttribute('boundary') === 'inside' && this.getAttribute('option') === 'scale') {
+    //           console.error('you can only choose either "hide" or "free" value inside the boundary attr.')
+    //         }
+    //         break;
 
-          case 'hide':
-            this.style.overflow = 'hidden'
-            break;
+    //       case 'hide':
+    //         this.style.overflow = 'hidden'
+    //         break;
 
-          default:
-            console.log('.move-element has no boundary');
-            break;
-        }
-        break;
+    //       default:
+    //         console.log('.move-element has no boundary');
+    //         break;
+    //     }
+    //     break;
       
-      case 'reset-button':
-        if (newVal === "has-button") {this.resetButton()}
-    }
+    //   case 'reset-button':
+    //     if (newVal === "has-button") {this.resetButton()}
+    // }
   }
   connectedCallback() {
     this.#create()
+    this.move()
   }
 
   #create() {
-    if (!this.hasAttribute('option')) {
-      this.setAttribute('option', '');
+    const options = {
+      container: this.getAttribute('container') || OPTIONS.SETTINGS.container,
+      scale: this.getAttribute('scale') || OPTIONS.SETTINGS.scale,
+      minScale: this.getAttribute('min-scale') || OPTIONS.SETTINGS.minScale,
+      maxScale: this.getAttribute('max-scale') || OPTIONS.SETTINGS.maxScale,
+      button: this.getAttribute('button') || OPTIONS.SETTINGS.button,
+      eventListener: this.getAttribute('event-listener') || OPTIONS.SETTINGS.eventListener,
+      keyboardCombine: this.getAttribute('keyboard-combine') || OPTIONS.SETTINGS.keyboardCombine,
     }
-    if (!this.hasAttribute('boundary')) {
-      this.setAttribute('boundary', 'hide');
-    }
-    if (!this.hasAttribute('reset-button')) {
-      this.setAttribute('reset-button', 'has-button');
-    }
-    this.#mount()
+    this.s = {}
+    this.s.options = options
+    this.createDiv()
+    this.#init()
   }
-
-  #mount() {
-    console.log('mount');
-  }
-  disconnectedCallback() {
-    // called when the element is removed from the DOM
-    console.log('removed');
-  }
-  //邊界判斷
-  insideBoundary = false
 
   //產出對應的元素
-  createDiv(name) {
+  createDiv() {
     const newDiv = document.createElement('div');
     this.appendChild(newDiv);
-    newDiv.className = `${name}-element`
+    newDiv.className = 'move-element'
   }
 
   //Reset 按鈕
@@ -114,10 +107,19 @@ class zoom4 extends HTMLElement {
     })
   }
 
+  #init() {
+    console.log(this.s.options);
+    const { scale } = this.s.options;
+    if(scale === 'zoom') this.zoom()
+    this.container()
+  }
+
   zoom() {
-    const scaleElement = this.querySelector('.scale-element')
+    const { maxScale, minScale, eventListener } = this.s.options;
+    console.log(eventListener.event);
+    const scaleElement = this.querySelector('.move-element')
     scaleElement.scale = 1;
-    scaleElement.addEventListener('wheel', function(e) {
+    scaleElement.addEventListener(eventListener.event, function(e) {
       e.preventDefault();
       this.scale += e.deltaY * -0.01;
       this.scale = Math.min(Math.max(.125,this.scale), 10);
@@ -126,6 +128,7 @@ class zoom4 extends HTMLElement {
     
   }
 
+  
   move(){
     //宣告
     const canTouchStart = ('ontouchstart' in document.documentElement)  ? 'touchstart' : 'mousedown';
@@ -177,22 +180,11 @@ class zoom4 extends HTMLElement {
           } else {
             distanceX = event.pageX - abs_x
             distanceY = event.pageY - abs_y
-            if (this.insideBoundary) {
-              if ( distanceX > self.offsetWidth - obj.offsetWidth) {
-                distanceX = self.offsetWidth - obj.offsetWidth
-              } else if( distanceX < 0) {
-                distanceX = 0
-              }
-              if ( distanceY > self.offsetHeight - obj.offsetHeight) {
-                distanceY = self.offsetHeight - obj.offsetHeight
-              } else if( distanceY < 0) {
-                distanceY = 0
-              }
-            }
           }
         }
         obj.style.left = `${ distanceX }px`
         obj.style.top = `${ distanceY }px`
+        
         //以下為測試用
         $left.innerHTML = `${ obj.style.left }`
         $top.innerHTML = `${ obj.style.top }`
@@ -207,6 +199,14 @@ class zoom4 extends HTMLElement {
     
   }
 
+  container() {
+    const { container } = this.s.options;
+    switch (container) {
+      case 'inside':
+        this.style.overflow = 'hidden'
+        break;
+    }
+  }
 }
 
 customElements.define('zoom-element', zoom4);
