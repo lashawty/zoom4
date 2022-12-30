@@ -1,5 +1,4 @@
 import OPTIONS from '/options.js';
-
 class zoom4 extends HTMLElement {
   constructor() {
     super();
@@ -8,52 +7,6 @@ class zoom4 extends HTMLElement {
     return [];
   }
   
-  attributeChangedCallback(attr, oldVal, newVal) {
-    // switch (attr) {
-    //   case 'option':
-    //     // move/scale
-    //     //如果有需要提供使用者改變設定，需另外補判斷，如scale => move
-    //     if (newVal === "move" || "scale") {
-    //       this.createDiv(newVal)
-    //       console.log('zoom4 init!!');
-    //     } else {console.error('Must have a value inside zoom-element such as (option="move/scale")')}
-
-    //     switch (newVal) {
-    //       case 'scale':
-    //         this.zoom()
-    //         break;
-
-    //       case 'move':
-    //         this.move()
-    //         break;
-            
-    //     }
-    //     break;
-      
-    //   case 'boundary':
-
-    //     switch (newVal) {
-    //       case 'inside':
-    //         this.insideBoundary = true
-    //         if (this.getAttribute('boundary') === 'inside' && this.getAttribute('option') === 'scale') {
-    //           console.error('you can only choose either "hide" or "free" value inside the boundary attr.')
-    //         }
-    //         break;
-
-    //       case 'hide':
-    //         this.style.overflow = 'hidden'
-    //         break;
-
-    //       default:
-    //         console.log('.move-element has no boundary');
-    //         break;
-    //     }
-    //     break;
-      
-    //   case 'reset-button':
-    //     if (newVal === "has-button") {this.resetButton()}
-    // }
-  }
   connectedCallback() {
     this.#create()
     this.move()
@@ -71,7 +24,7 @@ class zoom4 extends HTMLElement {
     }
     this.s = {}
     this.s.options = options
-    this.createDiv()
+    this.s.newSize = {}
     this.#init()
   }
 
@@ -107,28 +60,133 @@ class zoom4 extends HTMLElement {
     })
   }
 
+  //啟動
   #init() {
+    const el = this.querySelector('.move-element')
+    if(!el) alert(`Must have a element class='move-element' inside zoom-element`)
+    
+    const { scale, button } = this.s.options;
     console.log(this.s.options);
-    const { scale } = this.s.options;
     if(scale === 'zoom') this.zoom()
+
+    if(button === 'has-button') this.clickButtonZoom()
     this.container()
+    this.#getCurrentScale()
   }
 
+  //如果子元素寬高 > 父元素，則縮放至可視範圍，並回傳當前scale大小
+  #getCurrentScale() {
+    //取得元素寬高
+    const z4Width = this.offsetWidth
+    const z4Height = this.offsetHeight
+    const elWidth = this.querySelector('.move-element').offsetWidth
+    const elHeight = this.querySelector('.move-element').offsetHeight
+    const el = this.querySelector('.move-element')
+    let newScale
+    //判斷 move-element 寬度是否大於父層
+    //如果寬度>或寬度+高度都> 就用寬度的比例
+    //如果寬度< 高度> 就用高度
+    //如果都小於 就=1
+
+    if (elWidth > z4Width && elHeight > z4Height) {
+      newScale = (z4Width / elWidth) * .5
+    } else if (elWidth > z4Width) {
+      newScale = (z4Width / elWidth) * .9
+    } else if (elWidth <= z4Width && elHeight > z4Height) {
+      newScale = (z4Height / elHeight) * .9
+    } else if (elWidth <= z4Width && elHeight <= z4Height){
+      newScale = 1
+    }
+
+    el.style.transform = `translate(-50%, -50%) scale(${newScale})`
+    return newScale //傳到zoom()
+  }
+
+  //判斷最小值
+  //如果(父元素寬高/子元素寬高) < 設定值(minScale) 則最小值=(父元素寬高/子元素寬高)
+  //如果(父元素/子元素) > 設定值(minScale) 則最小值=minScale
+  #getCorrectMinScale() {
+    const { minScale, maxScale } = this.s.options;
+    const minScaleNumber = Number(minScale)
+    let newScale = this.#getCurrentScale()
+    let correctMinScale
+
+    if (newScale < minScaleNumber) {
+      correctMinScale = newScale
+    } else {
+      correctMinScale = minScaleNumber
+    }
+    return correctMinScale
+  }
+
+  //取得最小值後，再決定倍率 預設為1 
+  // scale(n) 如果 0.1 < n <1 正確倍率則為0.01 以此類推至0.0001
+  #setScaleRate() {
+    let correctMinScale = this.#getCorrectMinScale()
+    //zoom傳入
+    let rate = 1
+    if(correctMinScale < 1 && correctMinScale > .1){
+      rate = .1
+    } else if ( correctMinScale <= .1 && correctMinScale > .01) {
+      rate = .01
+    } else if (correctMinScale < .01 ) {
+      rate = .001
+    }
+    return rate
+  }
+
+  //縮放
   zoom() {
-    const { maxScale, minScale, eventListener } = this.s.options;
-    console.log(eventListener.event);
+    const { minScale, maxScale, eventListener } = this.s.options;
+    if (Number(minScale) >= Number(maxScale)) {
+      console.error('min-scale 不能大於或等於 max-scale')
+      return
+    }
+    let correctMinScale = this.#getCorrectMinScale()
+    let startScale = this.#getCurrentScale()
+    let rate = this.#setScaleRate()
+    
     const scaleElement = this.querySelector('.move-element')
-    scaleElement.scale = 1;
+
+    scaleElement.scale = startScale
     scaleElement.addEventListener(eventListener.event, function(e) {
       e.preventDefault();
-      this.scale += e.deltaY * -0.01;
-      this.scale = Math.min(Math.max(.125,this.scale), 10);
-      this.style.transform = `scale(${this.scale})`;
+      this.scale += e.deltaY * -0.01 * rate
+      this.scale = Math.min(Math.max(correctMinScale,this.scale), maxScale)
+      this.style.transform = `translate(-50%, -50%) scale(${this.scale})`
     })
-    
   }
 
-  
+  //按鈕縮放
+  clickButtonZoom() {
+    console.log(this.zoom());
+    const { maxScale } = this.s.options;
+    const buttons = document.querySelector('.zoom-buttons')
+    const plus = buttons.querySelector('.zoom-plus')
+    const minus = buttons.querySelector('.zoom-minus')
+    const reset = buttons.querySelector('.zoom-reset')
+
+    let correctMinScale = this.#getCorrectMinScale()
+    let startScale = this.#getCurrentScale()
+    let rate = this.#setScaleRate()
+
+    const scaleElement = this.querySelector('.move-element')
+    scaleElement.scale = startScale
+
+
+
+    let oldVal = startScale
+    let newVal
+    plus.addEventListener('click', function (e) {
+      e.preventDefault();
+      newVal = oldVal + rate
+      oldVal = newVal
+      scaleElement.scale = Math.max(correctMinScale,scaleElement.scale)
+      scaleElement.style.transform = `translate(-50%, -50%) scale(${oldVal})`
+
+    })
+  }
+  //位移
   move(){
     //宣告
     const canTouchStart = ('ontouchstart' in document.documentElement)  ? 'touchstart' : 'mousedown';
@@ -198,7 +256,8 @@ class zoom4 extends HTMLElement {
     })
     
   }
-
+  
+  //設定邊界
   container() {
     const { container } = this.s.options;
     switch (container) {
@@ -210,4 +269,3 @@ class zoom4 extends HTMLElement {
 }
 
 customElements.define('zoom-element', zoom4);
-

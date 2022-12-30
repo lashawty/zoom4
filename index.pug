@@ -8,10 +8,19 @@ html(lang="en")
     link(href="style.css", rel="stylesheet")
     
   body
-    zoom-element(scale="zoom" max-scale="8") 點擊白色區塊Reset 
+    zoom-element(scale="zoom" max-scale="8" min-scale=".1")
+      .move-element
+        img(src="img.jpg", alt="alt")
+      
       //開發完成後將下方left top及相關js移除
       .left 
       .top
-    .instructor
+
+    .zoom-buttons
+      .zoom-plus 
+      .zoom-minus 
+      .zoom-reset RESET
+
+      
     script(src="app-dist.js")
     script(type="module" src="zoom4-dist.js")

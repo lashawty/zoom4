@@ -7,27 +7,30 @@ zoom-element {
 }
 zoom-element .move-element {
   position: absolute;
+  top: 50%;
+  left: 50%;
   z-index: 999;
-  top: 0;
-  left: 0;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
   cursor: -webkit-grab;
   cursor: grab;
-}
-zoom-element .scale-element, zoom-element .move-element {
-  width: 50px;
-  height: 50px;
   background: #c7c7c7;
 }
-zoom-element .scale-element {
-  margin: 50px auto 0 auto;
+
+.zoom-buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  gap: 30px;
 }
-zoom-element .zoom-reset {
+
+.zoom-plus, .zoom-minus, .zoom-reset {
   cursor: pointer;
-  width: 180px;
-  height: 50px;
-  border: 1px solid black;
-  background: #fff;
-  color: #000;
 }
 
 * {
@@ -64,18 +67,71 @@ zoom-element {
   bottom: 100px;
 }
 
-.test1 {
-  margin: 0 auto;
+.move-element {
+  width: 380px;
+  height: 470px;
+}
+.move-element img {
+  width: 100%;
+  height: 100%;
 }
 
-.test2 {
-  margin: 20px auto 0 auto;
-  background: blue;
+.zoom-buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.zoom-plus, .zoom-minus, .zoom-reset {
+  margin-top: 30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 25px;
+  width: 180px;
+  height: 60px;
+  border-radius: 50px;
+  background: rgb(32, 48, 82);
   color: #fff;
-  text-align: center;
 }
 
-.zoom-reset {
-  margin: 20px auto 0 auto;
-  text-align: center;
+.zoom-plus {
+  position: relative;
+}
+.zoom-plus::before, .zoom-plus::after {
+  content: "";
+  width: 20px;
+  height: 4px;
+  background: #fff;
+}
+.zoom-plus::after {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 4px;
+  height: 20px;
+}
+
+.zoom-minus {
+  position: relative;
+}
+.zoom-minus::before {
+  content: "";
+  width: 20px;
+  height: 4px;
+  background: #fff;
 }

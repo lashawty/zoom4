@@ -8,12 +8,17 @@
     <link href="style.css" rel="stylesheet">
   </head>
   <body>
-    <zoom-element scale="zoom" max-scale="8">點擊白色區塊Reset 
+    <zoom-element scale="zoom" max-scale="8" min-scale=".1">
+      <div class="move-element"><img src="img.jpg" alt="alt"></div>
       <!--開發完成後將下方left top及相關js移除-->
       <div class="left"> </div>
       <div class="top"></div>
     </zoom-element>
-    <div class="instructor"></div>
+    <div class="zoom-buttons">
+      <div class="zoom-plus"> </div>
+      <div class="zoom-minus"> </div>
+      <div class="zoom-reset">RESET</div>
+    </div>
     <script src="app-dist.js"></script>
     <script type="module" src="zoom4-dist.js"></script>
   </body>

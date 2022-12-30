@@ -20,13 +20,48 @@ zoom-element
   text-align: center
 .top
   bottom: 100px
-.test1
-  margin: 0 auto
-.test2
-  margin: 20px auto 0 auto
-  background: blue
+
+.move-element
+  width: 380px
+  height: 470px
+  img
+    width: 100%
+    height: 100%
+
+.zoom-buttons
+  display: flex
+  justify-content: center
+  align-items: center
+.zoom-plus, .zoom-minus, .zoom-reset
+  margin-top: 30px
+  display: flex
+  justify-content: center
+  align-items: center 
+  font-size: 25px
+  width: 180px
+  height: 60px
+  border-radius: 50px
+  background: rgb(32, 48, 82)
   color: #fff
-  text-align: center
-.zoom-reset
-  margin: 20px auto 0 auto
-  text-align: center
+
+.zoom-plus
+  position: relative
+  &::before, &::after
+    content: ''
+    width: 20px
+    height: 4px
+    background: #fff
+  &::after
+    position: absolute
+    left: 50%
+    top: 50%
+    transform: translate(-50%, -50%)
+    width: 4px
+    height: 20px
+.zoom-minus
+  position: relative
+  &::before
+    content: ''
+    width: 20px
+    height: 4px
+    background: #fff
