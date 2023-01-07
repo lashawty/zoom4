@@ -27,7 +27,7 @@ doubleclick, mouseenter 只能兩種倍率做切換，到行動裝置時統一�
 1. 拖拉功能
 2. 滑鼠滾輪縮放 scale="on/off" 手機版無功能
 3. 滾輪縮放可設定是否使用組合鍵 key-combine="on/off" shift 按住才有縮放功能
-4. 最大、最小縮放設定 min-scale="0.5" max-scale="10" //預設值 0.1~4
+4. 最大、最小縮放設定 min-scale="0.5" max-scale="10" 預設值 0.1~4
 5. 是否綁定按鈕 button="has-button/none" 放大/縮小/回到預設值 結構請見"按鈕區塊："
 6. 綁定事件兩倍率切換 // click, dblclicl, hover, none, doublefinger(手機版才有)
 
