@@ -17,14 +17,24 @@ doubleclick, mouseenter 只能兩種倍率做切換，到行動裝置時統一�
 * mousewheel 可設定開啟滑鼠滾輪放大/縮小
 或開啟按住組合鍵 + 滾輪才能縮放 (Windows - Ctrl, MacOS - command)
 可傳入布林或物件，ex: mousewheel :true / mousewheel: { keyboardCombine: true}
-如果設定組合鍵，滑鼠在範圍內滾動時需要顯示操作提示 
-(參考: https://xwadex.com/vyv/panjit/@www/views/html/application/application_list.html)
+如果設定組合鍵，滑鼠在範圍內滾動時需要顯示操作提示
 
 
-* 參考功能連結：[Panzoom DEMO](https://timmywil.com/panzoom/demo/)
-* 參考專案：[Mingleurn](https://xwadex.com/vyv/mingleurn/@www/dist/views/tw/content/customized.html)
-* 開發網頁連結：[Develope DEMO](https://lashawty.github.io/zoom4/)
+* 開發網頁連結：[Develope DEMO](https://xwadex.com/_wwwv_/@WDD-F2E/zoom4/index.html)
 
+### 已完成功能
+
+1. 拖拉功能
+2. 滑鼠滾輪縮放 scale="on/off" 手機版無功能
+3. 滾輪縮放可設定是否使用組合鍵 key-combine="on/off" shift 按住才有縮放功能
+4. 最大、最小縮放設定 min-scale="0.5" max-scale="10" //預設值 0.1~4
+5. 是否綁定按鈕 button="has-button/none" 放大/縮小/回到預設值 結構請見"按鈕區塊："
+6. 綁定事件兩倍率切換 // click, dblclicl, hover, none, doublefinger(手機版才有)
+
+### 未完成功能
+
+1. 邊界計算
+2. 客製化元素，目前按鈕及元素需綁定特定class
 
 
 ###### tags: zoom4

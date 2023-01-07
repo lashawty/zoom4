@@ -1,0 +1,69 @@
+zoom-element {
+  position: relative;
+  display: block;
+  background: #3d3d3d;
+  width: 1000px;
+  height: 500px;
+}
+zoom-element:hover .mask {
+  opacity: 1;
+}
+zoom-element .mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  opacity: 0;
+  -webkit-transition: opacity 0.6s ease-in-out;
+  transition: opacity 0.6s ease-in-out;
+}
+@media (max-width: 768px) {
+  zoom-element .mask {
+    display: none;
+  }
+}
+zoom-element .mask p {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  width: 100%;
+  text-align: center;
+  font-size: 30px;
+  color: #fff;
+}
+zoom-element .move-element {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 999;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  cursor: -webkit-grab;
+  cursor: grab;
+  background: #c7c7c7;
+  -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.1, 1.11, 0.42, 1.4);
+  transition: -webkit-transform 0.5s cubic-bezier(0.1, 1.11, 0.42, 1.4);
+  transition: transform 0.5s cubic-bezier(0.1, 1.11, 0.42, 1.4);
+  transition: transform 0.5s cubic-bezier(0.1, 1.11, 0.42, 1.4), -webkit-transform 0.5s cubic-bezier(0.1, 1.11, 0.42, 1.4);
+}
+
+.zoom-buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  gap: 30px;
+}
+
+.zoom-plus, .zoom-minus, .zoom-reset {
+  cursor: pointer;
+}
+/*# sourceMappingURL=zoom4.css.map */

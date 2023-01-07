@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZOOM4</title>
+    <link href="./css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&amp;family=Noto+Sans+TC:wght@400;700&amp;display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <zoom-element scale="on" event="dblclick">
+      <div class="mask">
+        <p>請按下 "shift鍵" + 滾動滑鼠縮放</p>
+      </div>
+      <div class="move-element"><img src="./assets/img.jpg" alt="alt"></div>
+    </zoom-element>
+    <div class="demo">
+      <h1>ZOOM 4 DEMO</h1>
+      <div class="button-wrap">
+        <p class="bold title">按鈕區塊：</p>
+        <div class="zoom-buttons">
+          <div class="zoom-plus"> </div>
+          <div class="zoom-minus"> </div>
+          <div class="zoom-reset">RESET</div>
+        </div>
+      </div>
+      <div class="set-value">
+        <p class="bold title">當前最大值、最小值：</p>
+        <div class="wrap">
+          <p>Max Scale :</p>
+          <input class="max-value" placeholder="預設值 4">
+          <p>Min Scale :</p>
+          <input class="min-value" placeholder="預設值 0.1">
+        </div>
+      </div>
+      <div class="event button-group">
+        <p class="bold title">當前事件：</p>
+        <ul>
+          <li class="click">Click</li>
+          <li class="hover">Hover</li>
+          <li class="doubleclick">Double Click</li>
+          <li class="none">No Event</li>
+        </ul>
+      </div>
+      <div class="container button-group">
+        <p class="bold title">範圍：</p>
+        <ul>
+          <li class="container-inside">Inside</li>
+          <li class="container-free">Free</li>
+        </ul>
+      </div>
+      <!--開啟時加上.on   -->
+      <div class="wheel button-group">
+        <p class="bold title">滾輪控制：</p>
+        <ul>
+          <li class="wheel-on">開啟</li>
+          <li class="wheel-off">關閉</li>
+        </ul>
+        <div class="key-combine button-group">
+          <p class="bold title">組合鍵：</p>
+          <ul>
+            <li class="key-on">開啟</li>
+            <li class="key-off">關閉</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script src="./js/hammer.min.js"></script>
+    <script src="./js/app-dist.js"></script>
+    <script type="module" src="./js/zoom4.js"></script>
+  </body>
+</html>

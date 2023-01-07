@@ -1,0 +1,153 @@
+@import "zoom4"
+
+*
+  box-sizing: border-box
+p, h1
+  margin: 0
+body
+  display: flex
+  flex-wrap: wrap
+  margin: 0
+  font-size: 18px
+  font-family: 'Kanit', 'Noto Sans TC', sans-serif
+  @media (max-width: 768px)
+    flex-direction: column
+zoom-element
+  width: 70%
+  flex-shrink: 0
+  height: 100vh
+  @media (max-width: 768px)
+    width: 100%
+    height: 50vh
+
+.move-element
+  width: 19.79vw
+  height: 24.74vw
+  img
+    width: 100%
+    height: 100%
+.bold
+  font-weight: bold
+.title
+  font-size: 24px
+.demo
+  padding: 15px 15px 0
+  max-width: 30%
+  @media (max-width: 768px)
+    max-width: 100%
+.zoom-buttons
+  display: flex
+  justify-content: flex-start
+  align-items: center
+  flex-wrap: wrap
+  margin-top: 15px
+  &.off
+    >div
+      background: rgba(#000 , .3)
+      cursor: not-allowed
+.zoom-plus, .zoom-minus, .zoom-reset
+  display: flex
+  justify-content: center
+  align-items: center 
+  width: 100%
+  max-width: 150px
+  height: 60px
+  border-radius: 50px
+  background: rgb(32, 48, 82)
+  color: #fff
+.zoom-plus
+  position: relative
+  &::before, &::after
+    content: ''
+    width: 20px
+    height: 4px
+    background: #fff
+  &::after
+    position: absolute
+    left: 50%
+    top: 50%
+    transform: translate(-50%, -50%)
+    width: 4px
+    height: 20px
+.zoom-minus
+  position: relative
+  &::before
+    content: ''
+    width: 20px
+    height: 4px
+    background: #fff
+.set-value
+  margin-top: 20px
+  .wrap
+    margin-top: 15px
+    display: flex
+    gap: 15px
+    flex-wrap: wrap
+  input
+    border-radius: 60px
+    width: 135px
+    text-align: center
+    font-weight: bold
+
+.button-group
+  margin-top: 20px
+  ul
+    margin: 15px 0 0 0
+    padding: 0 10px
+    display: flex
+    flex-wrap: wrap
+    gap: 10px
+    list-style-type: none
+    &.center
+      li
+        width: 100%
+  li
+    padding: 10px
+    width: 250px
+    text-align: center
+    border-radius: 60px
+    border: 2px solid rgb(32, 48, 82)
+    transition: background .4s
+
+  //事件設置
+  &.event
+    li.active
+      background: rgb(32, 48, 82)
+      color: #fff
+  //範圍
+  &.container.on
+    .container-inside
+      background: rgb(32, 48, 82)
+      color: #fff
+  &.container.off
+    .container-free
+      background: rgb(32, 48, 82)
+      color: #fff
+
+  //滾輪控制
+  &.wheel.off
+    .wheel-off
+      background: rgb(32, 48, 82)
+      color: #fff
+    .key-combine
+      .key-off, .key-on
+        border: 2px solid transparent
+        background: rgba(#000, .5 )
+        color: #fff
+  &.wheel.on
+    .wheel-on
+      background: rgb(32, 48, 82)
+      color: #fff
+    .key-combine
+      li
+        // background: #fff
+        // color: rgb(32, 48, 82)
+        border: 2px solid rgb(32, 48, 82)
+.key-combine.on
+  .key-on
+    background: rgb(32, 48, 82)
+    color: #fff
+.key-combine.off
+  .key-off
+    background: rgb(32, 48, 82)
+    color: #fff

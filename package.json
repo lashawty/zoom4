@@ -18,6 +18,5 @@
   },
   "homepage": "https://github.com/lashawty/zoom4#readme",
   "dependencies": {
-    "panzoom": "^9.4.3"
   }
 }

@@ -1,0 +1,63 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title ZOOM4
+    link(href="./css/style.css", rel="stylesheet")
+    link(href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap", rel="stylesheet")
+    
+    
+  body
+    zoom-element(scale="on" event="dblclick")
+      .mask
+        p 請按下 "shift鍵" + 滾動滑鼠縮放
+      .move-element
+        img(src="./assets/img.jpg", alt="alt")
+      
+    .demo
+      h1 ZOOM 4 DEMO
+      .button-wrap
+        p.bold.title 按鈕區塊：
+        .zoom-buttons
+          .zoom-plus 
+          .zoom-minus 
+          .zoom-reset RESET
+      .set-value
+        p.bold.title 當前最大值、最小值：
+        .wrap
+          p Max Scale :
+          input.max-value(placeholder="預設值 4")
+
+          p Min Scale :
+          input.min-value(placeholder="預設值 0.1")
+
+      .event.button-group
+        p.bold.title 當前事件：
+        ul
+          li.click Click
+          li.hover Hover
+          li.doubleclick Double Click
+          li.none No Event
+      .container.button-group
+        p.bold.title 範圍：
+        ul
+          li.container-inside Inside
+          li.container-free Free
+
+      //開啟時加上.on   
+      .wheel.button-group
+        p.bold.title 滾輪控制：
+        ul
+          li.wheel-on 開啟
+          li.wheel-off 關閉
+        .key-combine.button-group
+          p.bold.title 組合鍵：
+          ul
+            li.key-on 開啟
+            li.key-off 關閉
+    
+    script(src="./js/hammer.min.js")
+    script(src="./js/app-dist.js")
+    script(type="module" src="./js/zoom4.js")

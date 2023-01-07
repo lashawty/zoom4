@@ -1,0 +1,46 @@
+zoom-element
+  position: relative
+  display: block
+  background: #3d3d3d
+  width: 1000px
+  height: 500px
+  &:hover
+    .mask
+      opacity: 1
+  .mask
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background: rgba(#000, .3)
+    z-index: 1000
+    opacity: 0
+    transition: opacity .6s ease-in-out
+    @media (max-width: 768px)
+      display: none
+    p
+      position: absolute
+      top: 50%
+      transform: translateY(-50%)
+      width: 100%
+      text-align: center
+      font-size: 30px
+      color: #fff
+  .move-element
+    position: absolute
+    top: 50%
+    left: 50%
+    z-index: 999
+    transform: translate(-50%, -50%)
+    cursor: grab
+    background: #c7c7c7
+    transition: transform .5s cubic-bezier(.1,1.11,.42,1.4)
+
+.zoom-buttons
+  display: flex
+  justify-content: center
+  align-content: center
+  gap: 30px
+.zoom-plus, .zoom-minus, .zoom-reset
+  cursor: pointer
