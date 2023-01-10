@@ -14,7 +14,7 @@ __webpack_require__.r(__webpack_exports__);
     maxScale: '4',
     button: 'has-button', // 是否綁定按鈕控制放大縮小 has-button || none
     rate: 1,
-    event: 'none', // click || dblclick || hover || none || doublefinger
+    event: 'none', // click || dblclick || hover || none 
     combineKey: 'off',
     element: '.move-element'
   },
@@ -114,7 +114,7 @@ class zoom4 extends HTMLElement {
     }
     if(event !== 'none') {
       this.eventZoom()
-      
+      this.eventZoomRWD()
     }
   }
 
@@ -127,10 +127,12 @@ class zoom4 extends HTMLElement {
   
   #mount(){
     this.#isMobileDevice()
-    this.container()
     this.#getCurrentScale()
     this.#getCorrectLimitScale()
+    this.#getInsideCorrectMaxScale ()
     this.#setScaleRate()
+    this.#setPosition()
+    this.#freeContainer() 
     this.demo()
   }
 
@@ -160,7 +162,8 @@ class zoom4 extends HTMLElement {
     
     this.s.options.currentScale = newScale
     this.s.options.originalScale = newScale
-    el.style.transform = `translate(-50%, -50%) scale(${newScale})`
+    el.style.transform = `scale(${newScale})`
+    // el.style.transformOrigin = `top left`
   }
 
   //判斷最小值
@@ -178,8 +181,37 @@ class zoom4 extends HTMLElement {
       correctMinScale = currentScale * minScale
       correctMaxScale = currentScale * maxScale
     }
+
     this.s.options.correctMinScale = Number(correctMinScale)
     this.s.options.correctMaxScale = Number(correctMaxScale)
+  }
+
+  #getInsideCorrectMaxScale () {
+    const { correctMaxScale, currentScale, container, element } = this.s.options;
+
+    //如果設定不是inside就返回
+    if (container !== 'inside') return
+
+    //如果範圍設置為inside, 正確最大縮放倍率為父層寬高 / 當前縮放倍率
+    const z4 = this
+    const el = this.querySelector(element)
+
+    //取得父層寬高 + 元素縮放後的寬高
+    const z4Width = z4.offsetWidth
+    const z4Height = z4.offsetHeight
+    const elWidth = el.offsetWidth * currentScale
+    const elHeight = el.offsetHeight * currentScale
+
+    //取得元素最大寬高
+    let currentMaxWidth = elWidth * correctMaxScale
+    let currentMaxHeight = elHeight * correctMaxScale
+
+    let insideCorrectMaxScale
+
+    if (currentMaxWidth >=  z4Width || currentMaxHeight >= z4Height) {
+      insideCorrectMaxScale = Math.min((z4Width / elWidth),(z4Height / elHeight))
+      z4.s.options.correctMaxScale = insideCorrectMaxScale
+    }
   }
 
   //取得最小值後，再決定倍率 預設為1 
@@ -221,7 +253,7 @@ class zoom4 extends HTMLElement {
           this.scale += e.deltaY * -0.01 * rate
           this.scale = Math.min(Math.max(correctMinScale,this.scale), correctMaxScale)
           self.s.options.currentScale = this.scale
-          this.style.transform = `translate(-50%, -50%) scale(${this.scale})`
+          this.style.transform = `scale(${this.scale})`
         })
         break;
     
@@ -245,80 +277,28 @@ class zoom4 extends HTMLElement {
           this.scale += e.deltaY * -0.01 * rate
           this.scale = Math.min(Math.max(correctMinScale,this.scale), correctMaxScale)
           self.s.options.currentScale = this.scale
-          this.style.transform = `translate(-50%, -50%) scale(${this.scale})`
-          this.style.transform = `translate(-50%, -50%) scale(${this.scale})`
+          this.style.transform = `scale(${this.scale})`
+          this.style.transform = `scale(${this.scale})`
           }
         })
         break;
     }
   }
 
-  //雙指縮放
-  doubleFingerZoom() {
+  //手機版雙指縮放
+  doubleFingerZoom(){
     if (!this.s.options.isMobileDevice) return
-    //宣告
-    const { event, correctMaxScale, originalScale } = this.s.options
+    const { correctMaxScale, correctMinScale, currentScale, rate} = this.s.options;
     const element = this.querySelector('.move-element')
     const z4 = this
-    let hammertime = new Hammer(element);
-    switch (event) {
-      case 'doublefinger':
-        hammertime.get('pinch').set({ enable: true });
-        hammertime.on('pinchout', function(ev) {
-          element.style.transform = `translate(-50%, -50%) scale(${correctMaxScale})`
-          z4.s.options.currentScale = z4.s.options.correctMaxScale
-        });
-        hammertime.on('pinchin', function(ev) {
-          element.style.transform = `translate(-50%, -50%) scale(${originalScale})`
-          z4.s.options.currentScale = z4.s.options.originalScale
-        });
-        break;
-      case 'click':
-        hammertime.on('tap', function(ev) {
-          if (z4.s.options.currentScale < z4.s.options.correctMaxScale) {
-            element.style.transform = `translate(-50%, -50%) scale(${correctMaxScale})`
-            z4.s.options.currentScale = z4.s.options.correctMaxScale
-          } else {
-            element.style.transform = `translate(-50%, -50%) scale(${originalScale})`
-            z4.s.options.currentScale = z4.s.options.originalScale
-          }
-        });
-      break;
-      case 'dblclick':
-        var mc = new Hammer.Manager(element);
-        mc.add( new Hammer.Tap({ taps: 2 }) );
-        mc.on('tap', function(ev) {
-          if (z4.s.options.currentScale < z4.s.options.correctMaxScale) {
-            element.style.transform = `translate(-50%, -50%) scale(${correctMaxScale})`
-            z4.s.options.currentScale = z4.s.options.correctMaxScale
-          } else {
-            element.style.transform = `translate(-50%, -50%) scale(${originalScale})`
-            z4.s.options.currentScale = z4.s.options.originalScale
-          }
-        });
-      break;
-      case 'hover':
-        hammertime.on('press', function(ev) {
-          element.style.transform = `translate(-50%, -50%) scale(${correctMaxScale})`
-          z4.s.options.currentScale = z4.s.options.correctMaxScale
-        });
-        hammertime.on('pressup', function(ev) {
-          element.style.transform = `translate(-50%, -50%) scale(${originalScale})`
-          z4.s.options.currentScale = z4.s.options.originalScale
-        });
-      break;
-    }
-
-  
+    // let zoom = false
+    let distance
+    let hammertime = new Hammer(z4);
     hammertime.get('pinch').set({ enable: true });
-    hammertime.on('pinchout', function(ev) {
-      element.style.transform = `translate(-50%, -50%) scale(${correctMaxScale})`
-      z4.s.options.currentScale = z4.s.options.correctMaxScale
+    hammertime.on('pinch', function(ev) {
+      console.log(ev.distance);
     });
-    hammertime.on('pinchin', function(ev) {
-      element.style.transform = `translate(-50%, -50%) scale(${originalScale})`
-      z4.s.options.currentScale = z4.s.options.originalScale
-    });
+    
   }
 
   //按鈕縮放
@@ -345,7 +325,7 @@ class zoom4 extends HTMLElement {
       }
       console.log(self.s.options,'plus');
       self.s.options.currentScale = Number(startScale)
-      scaleElement.style.transform = `translate(-50%, -50%) scale(${startScale})`
+      scaleElement.style.transform = `scale(${startScale})`
     })
 
 
@@ -360,13 +340,13 @@ class zoom4 extends HTMLElement {
       }
       self.s.options.currentScale = Number(startScale)
       console.log(self.s.options,'minus');
-      scaleElement.style.transform = `translate(-50%, -50%) scale(${startScale})`
+      scaleElement.style.transform = `scale(${startScale})`
     })
     
     reset.addEventListener('click', function (e) {
       e.preventDefault();
       self.s.options.currentScale = originalScale
-      scaleElement.style.transform = `translate(-50%, -50%) scale(${originalScale})`
+      scaleElement.style.transform = `scale(${originalScale})`
     })
   }
 
@@ -379,24 +359,24 @@ class zoom4 extends HTMLElement {
     if (event === 'hover') {
       element.addEventListener('mouseenter', function () {
         if (z4.s.options.currentScale !== correctMaxScale) {
-          this.style.transform = `translate(-50%, -50%) scale(${correctMaxScale})`
+          this.style.transform = `scale(${correctMaxScale})`
           z4.s.options.currentScale = z4.s.options.correctMaxScale
           console.log(z4.s.options);
         }
       })
       element.addEventListener('mouseleave', function () {
-        this.style.transform = `translate(-50%, -50%) scale(${originalScale})`
+        this.style.transform = `scale(${originalScale})`
         z4.s.options.currentScale = z4.s.options.originalScale
         console.log(z4.s.options);
       })
     } else {
       element.addEventListener(event, function () {
         if (z4.s.options.currentScale < correctMaxScale) {
-          this.style.transform = `translate(-50%, -50%) scale(${correctMaxScale})`
+          this.style.transform = `scale(${correctMaxScale})`
           z4.s.options.currentScale = z4.s.options.correctMaxScale
           console.log(z4.s.options);
         } else {
-          this.style.transform = `translate(-50%, -50%) scale(${originalScale})`
+          this.style.transform = `scale(${originalScale})`
           z4.s.options.currentScale = z4.s.options.originalScale
           console.log(z4.s.options);
         }
@@ -405,19 +385,115 @@ class zoom4 extends HTMLElement {
     
   }
 
+  //手機版事件縮放
+  eventZoomRWD() {
+    if (!this.s.options.isMobileDevice) return
+    //宣告
+    const { event, correctMaxScale, originalScale } = this.s.options
+    const element = this.querySelector('.move-element')
+    const z4 = this
+    let hammertime = new Hammer(element);
+    switch (event) {
+      case 'click':
+        hammertime.on('tap', function(ev) {
+          if (z4.s.options.currentScale < z4.s.options.correctMaxScale) {
+            element.style.transform = `scale(${correctMaxScale})`
+            z4.s.options.currentScale = z4.s.options.correctMaxScale
+          } else {
+            element.style.transform = `scale(${originalScale})`
+            z4.s.options.currentScale = z4.s.options.originalScale
+          }
+        });
+      break;
+      case 'dblclick':
+        var mc = new Hammer.Manager(element);
+        mc.add( new Hammer.Tap({ taps: 2 }) );
+        mc.on('tap', function(ev) {
+          if (z4.s.options.currentScale < z4.s.options.correctMaxScale) {
+            element.style.transform = `scale(${correctMaxScale})`
+            z4.s.options.currentScale = z4.s.options.correctMaxScale
+          } else {
+            element.style.transform = `scale(${originalScale})`
+            z4.s.options.currentScale = z4.s.options.originalScale
+          }
+        });
+      break;
+      case 'hover':
+        hammertime.on('press', function(ev) {
+          element.style.transform = `scale(${correctMaxScale})`
+          z4.s.options.currentScale = z4.s.options.correctMaxScale
+        });
+        hammertime.on('pressup', function(ev) {
+          element.style.transform = `scale(${originalScale})`
+          z4.s.options.currentScale = z4.s.options.originalScale
+        });
+      break;
+    }
+
+  }
+
+  //初始位置設定, 取得初始元素寬高
+  #setPosition(){
+    const { currentScale, element } = this.s.options
+    if (currentScale === 1) return
+    const el = this.querySelector(element)
+    let correctLeft, correctTop
+    const elWidth = el.offsetWidth
+    const elHeight = el.offsetHeight
+
+    correctLeft = elWidth * ( 1 - currentScale) / -2
+    correctTop = elHeight * ( 1 - currentScale) / -2
+
+    
+
+    el.style.left = `${correctLeft}px`
+    el.style.top = `${correctTop}px`
+    
+    this.s.options.z4Width = this.offsetWidth
+    this.s.options.z4Height = this.offsetHeight
+    this.s.options.elWidthBefore = elWidth
+    this.s.options.elHeightBefore = elHeight
+    this.s.options.elWidthAfter = elWidth * currentScale
+    this.s.options.elHeightAfter = elHeight * currentScale
+    this.s.options.distanceX = correctLeft
+    this.s.options.distanceY = correctTop
+  }
+
+  //監聽縮放時是否跑出邊界
+  #detectPosition() {
+    const { currentScale, element,  container, elWidthBefore, elHeightBefore, elWidthAfter, elHeightAfter, z4Height, z4Width, distanceX, distanceY} = this.s.options
+    if (container === 'free') return
+    const z4 = this
+    const el = this.querySelector(element)
+
+    //
+    let correctCurrentScale, deltaX, deltaY
+    let half = .5
+    el.addEventListener('transitionstart', ()=> {
+      correctCurrentScale = z4.s.options.currentScale
+      deltaX = distanceX - (((z4Width - elWidthBefore * correctCurrentScale) - elWidthAfter) * half)
+      deltaY = distanceY - (((z4Height - elHeightBefore * correctCurrentScale) - elHeightAfter) * half)
+      console.log(deltaY);
+      el.style.left = `${deltaX}px`
+      // el.style.top = `${deltaY}px`
+    })
+    el.addEventListener('transitionend', ()=> {
+      console.log('zoom end');
+    })
+  }
+
   //位移
   move(){
     //宣告
     const canTouchStart = ('ontouchstart' in document.documentElement)  ? 'touchstart' : 'mousedown';
     const canTouchEnd = ('ontouchend' in document.documentElement)  ? 'touchend' : 'mouseup';
     const canTouchMove = ('ontouchmove' in document.documentElement)  ? 'touchmove' : 'mousemove';
-    const obj = this.querySelector('.move-element')
-    const self = this
-    let isMove
-    let abs_x
-    let abs_y
-    let distanceX
-    let distanceY
+
+    const {element, container, currentScale, originalScale} = this.s.options
+    const obj = this.querySelector(element)
+    const z4 = this
+    let isMove, abs_x, abs_y, distanceX, distanceY
+    let correctCurrentScale = currentScale
     
     this.addEventListener(canTouchStart, function(event){
       
@@ -443,15 +519,53 @@ class zoom4 extends HTMLElement {
             distanceY = event.pageY - abs_y
           }
         }
-        obj.style.left = `${ distanceX }px`
-        obj.style.top = `${ distanceY }px`
         
-        //以下為測試用
+        
+        switch (container) {
+          case 'inside':
+            //當前縮放
+            correctCurrentScale = z4.s.options.currentScale
+
+            //縮放後的寬高
+            let scaledObjWidth = obj.offsetWidth * correctCurrentScale
+            let scaledObjHeight = obj.offsetHeight * correctCurrentScale
+
+            //縮放後的寬高 - 物件寬高 / 2
+            let halfDeltaWidth = (scaledObjWidth - obj.offsetWidth) / 2
+            let halfDeltaHeight = (scaledObjHeight - obj.offsetHeight) / 2
+            //正確left, top距離計算
+            let correctLeft = distanceX - halfDeltaWidth
+            let correctTop = distanceY - halfDeltaHeight
+
+            //判斷是否碰到邊界
+
+            //x軸
+            if((scaledObjWidth + correctLeft) >= z4.offsetWidth) {
+              distanceX = (z4.offsetWidth - scaledObjWidth) + halfDeltaWidth
+            }
+            if (distanceX <= halfDeltaWidth) distanceX = halfDeltaWidth
+
+            //y軸
+            if((scaledObjHeight + correctTop) >= z4.offsetHeight) {
+              distanceY = (z4.offsetHeight - scaledObjHeight) + halfDeltaHeight
+            }
+            if (distanceY<= halfDeltaHeight) distanceY = halfDeltaHeight
+
+            obj.style.left = `${ distanceX }px`
+            obj.style.top = `${ distanceY }px`
+            break;
+        
+          case 'free':
+            obj.style.left = `${ distanceX }px`
+            obj.style.top = `${ distanceY }px`
+            break;
+        }
         this.s.options.distanceX = distanceX
         this.s.options.distanceY = distanceY
     })
       
     })
+
 
     this.addEventListener(canTouchEnd, function () {
       isMove = false
@@ -460,15 +574,12 @@ class zoom4 extends HTMLElement {
   }
   
   //設定邊界
-  container() {
+  #freeContainer() {
     const { container } = this.s.options;
-    switch (container) {
-      case 'inside':
-        this.style.overflow = 'hidden'
-        break;
+    if (container === 'free') {
+      this.style.overflow = 'hidden'
     }
   }
-
   //demo
   demo() {
     console.log(this.s.options);

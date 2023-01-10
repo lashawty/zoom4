@@ -37,18 +37,14 @@ zoom-element .mask p {
 }
 zoom-element .move-element {
   position: absolute;
-  top: 50%;
-  left: 50%;
   z-index: 999;
-  -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
   cursor: -webkit-grab;
   cursor: grab;
   background: #c7c7c7;
-  -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.1, 1.11, 0.42, 1.4);
-  transition: -webkit-transform 0.5s cubic-bezier(0.1, 1.11, 0.42, 1.4);
-  transition: transform 0.5s cubic-bezier(0.1, 1.11, 0.42, 1.4);
-  transition: transform 0.5s cubic-bezier(0.1, 1.11, 0.42, 1.4), -webkit-transform 0.5s cubic-bezier(0.1, 1.11, 0.42, 1.4);
+  -webkit-transition: -webkit-transform 0.6s ease-out;
+  transition: -webkit-transform 0.6s ease-out;
+  transition: transform 0.6s ease-out;
+  transition: transform 0.6s ease-out, -webkit-transform 0.6s ease-out;
 }
 
 .zoom-buttons {
