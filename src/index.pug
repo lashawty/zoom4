@@ -3,14 +3,14 @@ html(lang="en")
   head
     meta(charset="UTF-8")
     meta(http-equiv="X-UA-Compatible", content="IE=edge")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(name="viewport", content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1")
     title ZOOM4
     link(href="./css/style.css", rel="stylesheet")
     link(href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap", rel="stylesheet")
     
     
   body
-    zoom-element(scale="on" container="inside" event="dblclick")
+    zoom-element(scale="on" container="free" event="hover")
       .mask
         p 請按下 "shift鍵" + 滾動滑鼠縮放
       .move-element
@@ -58,6 +58,7 @@ html(lang="en")
             li.key-on 開啟
             li.key-off 關閉
     
+    .pinch 手機版測試用
     script(src="./js/hammer.min.js")
     script(src="./js/app-dist.js")
     script(type="module" src="./js/zoom4.js")

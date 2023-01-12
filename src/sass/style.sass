@@ -6,7 +6,6 @@ p, h1
   margin: 0
 body
   margin: 0
-  padding-bottom: 100px
   display: flex
   flex-wrap: wrap
   font-size: 18px
@@ -15,7 +14,6 @@ body
     flex-direction: column
 zoom-element
   width: 70%
-  max-width: 1000px
   flex-shrink: 0
   height: 100vh
   @media (max-width: 768px)
@@ -23,9 +21,12 @@ zoom-element
     height: 50vh
 
 .move-element
-  width: 2000px
-  height: 2000px
+  width: 450px
+  height: 500px
   img
+    position: absolute
+    top: 0
+    left: 0
     width: 100%
     height: 100%
 .bold
@@ -153,3 +154,15 @@ zoom-element
   .key-off
     background: rgb(32, 48, 82)
     color: #fff
+
+.pinch
+  display: none
+  position: fixed
+  bottom: 0
+  width: 100%
+  padding: 10px 0
+  text-align: center
+  background: #000
+  color: #fff
+  @media (max-width: 768px)
+    display: block
