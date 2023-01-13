@@ -8,6 +8,10 @@ export default {
     rate: 1,
     event: 'none', // click || dblclick || hover || none 
     combineKey: 'off',
-    element: '.move-element'
+    element: '.move-element',
+    buttonGroup: '.zoom-buttons',
+    plusButton: '.zoom-plus',
+    minusButton: '.zoom-minus',
+    resetButton: '.zoom-reset',
   },
 };

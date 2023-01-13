@@ -22,6 +22,10 @@ class zoom4 extends HTMLElement {
       event: this.getAttribute('event') || OPTIONS.SETTINGS.event,
       combineKey: this.getAttribute('key-combine') || OPTIONS.SETTINGS.combineKey,
       element: this.getAttribute('move-element') || OPTIONS.SETTINGS.element,
+      buttonGroup: OPTIONS.SETTINGS.buttonGroup,
+      plusButton: OPTIONS.SETTINGS.plusButton,
+      minusButton: OPTIONS.SETTINGS.minusButton,
+      resetButton: OPTIONS.SETTINGS.resetButton,
     }
     this.s = {}
     this.s.options = options
@@ -31,10 +35,10 @@ class zoom4 extends HTMLElement {
 
   //啟動
   #init() {
-    const el = this.querySelector('.move-element')
-    if(!el) alert(`Must have a element class='move-element' inside zoom-element`)
+    const { scale, button, event, element } = this.s.options;
+    const el = this.querySelector(element)
+    if(!el) alert(`Must have an element inside zoom-element !!`)
     
-    const { scale, button, event } = this.s.options;
     
     this.#mount()
     
@@ -70,12 +74,13 @@ class zoom4 extends HTMLElement {
 
   //如果子元素寬高 > 父元素，則縮放至可視範圍，並回傳當前scale大小
   #getCurrentScale() {
+    const {element} = this.s.options
     //取得元素寬高
     const z4Width = this.offsetWidth
     const z4Height = this.offsetHeight
-    const elWidth = this.querySelector('.move-element').offsetWidth
-    const elHeight = this.querySelector('.move-element').offsetHeight
-    const el = this.querySelector('.move-element')
+    const el = this.querySelector(element)
+    const elWidth = el.offsetWidth
+    const elHeight = el.offsetHeight
     let newScale
     //判斷 move-element 寬度是否大於父層
     //如果寬度>或寬度+高度都> 就用寬度的比例
@@ -101,9 +106,9 @@ class zoom4 extends HTMLElement {
   //如果(父元素寬高/子元素寬高) < 設定值(minScale) 則最小值=(父元素寬高/子元素寬高)
   //如果(父元素/子元素) > 設定值(minScale) 則最小值=minScale
   #getCorrectMinScale() {
-    const { minScale, maxScale, currentScale } = this.s.options;
+    const { minScale, maxScale, currentScale, element } = this.s.options;
     let correctMinScale, correctMaxScale
-    const el = this.querySelector('.move-element')
+    const el = this.querySelector(element)
     console.log(this.s.options);
     if (currentScale === 1) {
       correctMinScale = minScale
@@ -166,20 +171,18 @@ class zoom4 extends HTMLElement {
   //滾輪縮放
   wheelZoom() {
     if (this.s.options.isMobileDevice) return
-    const { minScale, maxScale, correctMaxScale, correctMinScale, combineKey } = this.s.options;
+    const { minScale, maxScale, correctMaxScale, correctMinScale, combineKey, element } = this.s.options;
     if (Number(minScale) >= Number(maxScale)) {
       console.error('min-scale 不能大於或等於 max-scale')
       return
     }
     let rate = this.s.options.rate
     const self = this
-    const scaleElement = this.querySelector('.move-element')
-    const mask = this.querySelector('.mask')
+    const scaleElement = this.querySelector(element)
 
 
     switch (combineKey) {
       case 'off':
-        mask.style.display = 'none'
         scaleElement.addEventListener('wheel', function(e) {
           e.preventDefault();
           this.scale = Number(self.s.options.currentScale)
@@ -192,9 +195,6 @@ class zoom4 extends HTMLElement {
     
       case 'on':
         let keyDown = false
-        setTimeout(() => {
-          mask.style.display = 'none'
-        }, 300);
         document.addEventListener('keydown', (event)=> {
           if(event.key === 'Shift'){
             keyDown = true
@@ -221,8 +221,8 @@ class zoom4 extends HTMLElement {
   //手機版雙指縮放
   doubleFingerZoom(){
     if (!this.s.options.isMobileDevice) return
-    const { correctMaxScale, correctMinScale, rate} = this.s.options;
-    const el = this.querySelector('.move-element')
+    const { correctMaxScale, correctMinScale, rate, element} = this.s.options;
+    const el = this.querySelector(element)
     const z4 = this
     let distance, scaleAfterZoom, scaleBeforeZoom, currentScale
     let hammertime = new Hammer(z4);
@@ -262,15 +262,15 @@ class zoom4 extends HTMLElement {
 
   //按鈕縮放
   clickButtonZoom() {
-    const { correctMaxScale, originalScale
+    const { correctMaxScale, originalScale, element, buttonGroup, plusButton, minusButton, resetButton
     } = this.s.options;
-    const buttons = document.querySelector('.zoom-buttons')
-    const plus = buttons.querySelector('.zoom-plus')
-    const minus = buttons.querySelector('.zoom-minus')
-    const reset = buttons.querySelector('.zoom-reset')
+    const buttons = document.querySelector(buttonGroup)
+    const plus = buttons.querySelector(plusButton)
+    const minus = buttons.querySelector(minusButton)
+    const reset = buttons.querySelector(resetButton)
     const self = this
     let rate = Number(this.s.options.rate)
-    const scaleElement = this.querySelector('.move-element')
+    const scaleElement = this.querySelector(element)
     let newVal
 
     plus.addEventListener('click', function (e) {
@@ -312,32 +312,29 @@ class zoom4 extends HTMLElement {
   //事件縮放
   eventZoom() {
     if (this.s.options.isMobileDevice) return
-    const { event, correctMaxScale, originalScale } = this.s.options
-    const element = this.querySelector('.move-element')
+    const { event, correctMaxScale, originalScale, element } = this.s.options
+    const el = this.querySelector(element)
     const z4 = this
     if (event === 'hover') {
-      element.addEventListener('mouseenter', function () {
+      el.addEventListener('mouseenter', function () {
         if (z4.s.options.currentScale !== correctMaxScale) {
           this.style.transform = `scale(${correctMaxScale})`
           z4.s.options.currentScale = z4.s.options.correctMaxScale
-          console.log(z4.s.options);
         }
       })
-      element.addEventListener('mouseleave', function () {
+      el.addEventListener('mouseleave', function () {
         this.style.transform = `scale(${originalScale})`
         z4.s.options.currentScale = z4.s.options.originalScale
-        console.log(z4.s.options);
       })
     } else {
-      element.addEventListener(event, function () {
+      el.addEventListener(event, function (e) {
+        if(event ==='click' && z4.s.options.moving) return
         if (z4.s.options.currentScale < correctMaxScale) {
           this.style.transform = `scale(${correctMaxScale})`
           z4.s.options.currentScale = z4.s.options.correctMaxScale
-          console.log(z4.s.options);
         } else {
           this.style.transform = `scale(${originalScale})`
           z4.s.options.currentScale = z4.s.options.originalScale
-          console.log(z4.s.options);
         }
       })
     }
@@ -348,42 +345,42 @@ class zoom4 extends HTMLElement {
   eventZoomRWD() {
     if (!this.s.options.isMobileDevice) return
     //宣告
-    const { event, correctMaxScale, originalScale } = this.s.options
-    const element = this.querySelector('.move-element')
+    const { event, correctMaxScale, originalScale, element } = this.s.options
+    const el = this.querySelector(element)
     const z4 = this
-    let hammertime = new Hammer(element);
+    let hammertime = new Hammer(el);
     switch (event) {
       case 'click':
         hammertime.on('tap', function(ev) {
           if (z4.s.options.currentScale < z4.s.options.correctMaxScale) {
-            element.style.transform = `scale(${correctMaxScale})`
+            el.style.transform = `scale(${correctMaxScale})`
             z4.s.options.currentScale = z4.s.options.correctMaxScale
           } else {
-            element.style.transform = `scale(${originalScale})`
+            el.style.transform = `scale(${originalScale})`
             z4.s.options.currentScale = z4.s.options.originalScale
           }
         });
       break;
       case 'dblclick':
-        var mc = new Hammer.Manager(element);
+        var mc = new Hammer.Manager(el);
         mc.add( new Hammer.Tap({ taps: 2 }) );
         mc.on('tap', function(ev) {
           if (z4.s.options.currentScale < z4.s.options.correctMaxScale) {
-            element.style.transform = `scale(${correctMaxScale})`
+            el.style.transform = `scale(${correctMaxScale})`
             z4.s.options.currentScale = z4.s.options.correctMaxScale
           } else {
-            element.style.transform = `scale(${originalScale})`
+            el.style.transform = `scale(${originalScale})`
             z4.s.options.currentScale = z4.s.options.originalScale
           }
         });
       break;
       case 'hover':
         hammertime.on('press', function(ev) {
-          element.style.transform = `scale(${correctMaxScale})`
+          el.style.transform = `scale(${correctMaxScale})`
           z4.s.options.currentScale = z4.s.options.correctMaxScale
         });
         hammertime.on('pressup', function(ev) {
-          element.style.transform = `scale(${originalScale})`
+          el.style.transform = `scale(${originalScale})`
           z4.s.options.currentScale = z4.s.options.originalScale
         });
       break;
@@ -432,6 +429,7 @@ class zoom4 extends HTMLElement {
     this.addEventListener(canTouchStart, function(event){
       event.preventDefault()
       isMove = true
+      z4.s.options.moving = false
       //抓取子元素原本的位置
       if (canTouchStart == 'touchstart') {
         abs_x = event.targetTouches[0].pageX - obj.offsetLeft;
@@ -444,6 +442,7 @@ class zoom4 extends HTMLElement {
       this.addEventListener(canTouchMove,event => {
         if(z4.s.options.pinchObserver) return
         if (isMove) {
+          z4.s.options.moving = true
           if(canTouchMove == 'touchmove') {
             distanceX = event.targetTouches[0].pageX - abs_x
             distanceY = event.targetTouches[0].pageY - abs_y
@@ -452,7 +451,6 @@ class zoom4 extends HTMLElement {
             distanceY = event.pageY - abs_y
           }
         }
-        
         
         switch (container) {
           case 'inside':

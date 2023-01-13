@@ -26,15 +26,14 @@ doubleclick, mouseenter 只能兩種倍率做切換，到行動裝置時統一�
 
 1. 拖拉功能
 2. 滑鼠滾輪縮放 scale="on/off" 手機版無功能
-3. 滾輪縮放可設定是否使用組合鍵 key-combine="on/off" shift 按住才有縮放功能
-4. 最大、最小縮放設定 min-scale="0.5" max-scale="10" 預設值 0.1~4
-5. 是否綁定按鈕 button="has-button/none" 放大/縮小/回到預設值 結構請見"按鈕區塊："
-6. 綁定事件兩倍率切換 // click, dblclicl, hover, none, doublefinger(手機版才有)
-
-### 未完成功能
-
-1. 邊界計算
-2. 客製化元素，目前按鈕及元素需綁定特定class
+3. 滾輪縮放可設定是否使用組合鍵 key-combine="on/off" shift 按住才有縮放功能 手機版為兩指縮放
+4. 最大、最小縮放設定 ex: (min-scale="0.5" max-scale="10") 預設值 0.1~4
+5. 若 container="inside" 最終 max-scale 不會超過當前父元素寬高
+6. 是否綁定按鈕 button="has-button/none" 放大/縮小/回到預設值 結構請見"按鈕區塊 若要更改 class 請至 options 修改
+7. 綁定事件兩倍率切換 // click, dblclick, hover, none
+8. 可客製化元素，element, buttonGroup, plusButton, minusButton, resetButton (按鈕元件外層須加上buttonGroup不然會無法query)
+### 問題
+1. container="inside" 時，若於邊界放大需另外計算超出部分(目前已完成拖拉事件的計算，可測試在中間放大後的拖拉事件)
 
 
 ###### tags: zoom4

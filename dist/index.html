@@ -9,10 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&amp;family=Noto+Sans+TC:wght@400;700&amp;display=swap" rel="stylesheet">
   </head>
   <body>
-    <zoom-element scale="on" container="free" event="hover">
-      <div class="mask">
-        <p>請按下 "shift鍵" + 滾動滑鼠縮放</p>
-      </div>
+    <!--可設定條件-->
+    <!-- 滾輪縮放 scale="on/off" 若為on 可另外設置 key-combine="on/off" 手機版可測試雙指縮放-->
+    <!-- 最大最小值 min-scale="數字" max-scale="數字" 若min-scale >= max-scale會噴錯-->
+    <!-- 綁定按鈕 button = "has-button/none" 若要設置button的名字請至options-->
+    <!-- 事件縮放 event = "hover/click/dblclick/none"-->
+    <!-- 當 event="click" 的時候 如果點擊元素時"移動滑鼠"，不會觸發縮放-->
+    <!-- 範圍 container="inside/free"-->
+    <zoom-element scale="off" container="inside" event="dblclick" min-scale=".2" max-scale="20" button="has-button">
       <div class="move-element"><img src="./assets/img.jpg" alt="alt"></div>
     </zoom-element>
     <div class="demo">
