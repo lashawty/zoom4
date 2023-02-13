@@ -20,7 +20,7 @@ doubleclick, mouseenter 只能兩種倍率做切換，到行動裝置時統一�
 如果設定組合鍵，滑鼠在範圍內滾動時需要顯示操作提示
 
 
-* 開發網頁連結：[Develope DEMO](https://xwadex.com/_wwwv_/@WDD-F2E/zoom4/index.html)
+* 開發網頁連結：[Develope DEMO](https://xwadex.com/_pvd_/@WDD-F2E/zoom4/index.html)
 
 ### 已完成功能
 
