@@ -56,7 +56,6 @@ zoom-element .move-element {
           justify-content: center;
   -ms-flex-line-pack: center;
       align-content: center;
-  gap: 30px;
 }
 
 .zoom-plus, .zoom-minus, .zoom-reset {

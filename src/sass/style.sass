@@ -2,8 +2,14 @@
 
 *
   box-sizing: border-box
-p, h1
+p, h1, h4
   margin: 0
+h1
+  text-align: center
+h4
+  color: rgba(#000, .7)
+  font-size: 20px
+  text-align: center
 body
   margin: 0
   display: flex
@@ -11,7 +17,7 @@ body
   font-size: 18px
   font-family: 'Kanit', 'Noto Sans TC', sans-serif
   @media (max-width: 768px)
-    flex-direction: column
+    display: block
 zoom-element
   width: 70%
   flex-shrink: 0
@@ -21,8 +27,8 @@ zoom-element
     height: 50vh
 
 .move-element
-  width: 1000px
-  height: 100%
+  width: 350px
+  height: 350px
   img
     position: absolute
     top: 0
@@ -36,13 +42,16 @@ zoom-element
 .demo
   padding: 15px 15px 0
   max-width: 30%
+  overflow: visible
   @media (max-width: 768px)
+    padding-bottom: 65px
     max-width: 100%
 .zoom-buttons
   display: flex
   justify-content: flex-start
   align-items: center
   flex-wrap: wrap
+  gap: 5%
   margin-top: 15px
   &.off
     >div
@@ -52,8 +61,7 @@ zoom-element
   display: flex
   justify-content: center
   align-items: center 
-  width: 100%
-  max-width: 150px
+  width: 30%
   height: 60px
   border-radius: 50px
   background: rgb(32, 48, 82)
@@ -106,7 +114,7 @@ zoom-element
         width: 100%
   li
     padding: 10px
-    width: 250px
+    width: calc(50% - 10px)
     text-align: center
     border-radius: 60px
     border: 2px solid rgb(32, 48, 82)

@@ -4,13 +4,13 @@ html(lang="en")
     meta(charset="UTF-8")
     meta(http-equiv="X-UA-Compatible", content="IE=edge")
     meta(name="viewport", content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1")
-    title ZOOM4
+    title ZOOM 4 Demo
     link(href="./css/style.css", rel="stylesheet")
     link(href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap", rel="stylesheet")
     
     
   body
-    //可設定條件
+    // 可設定條件
     // 滾輪縮放 scale="on/off" 若為on 可另外設置 key-combine="on/off" 手機版可測試雙指縮放
     // 最大最小值 min-scale="數字" max-scale="數字" 若min-scale >= max-scale會噴錯
     // 綁定按鈕 button = "has-button/none" 若要設置button的名字請至options
@@ -26,6 +26,7 @@ html(lang="en")
       
     .demo
       h1 ZOOM 4 DEMO
+      h4 僅按鈕區塊可點擊
       .button-wrap
         p.bold.title 按鈕區塊：
         .zoom-buttons
@@ -42,29 +43,29 @@ html(lang="en")
           input.min-value(placeholder="預設值 0.1")
 
       .event.button-group
-        p.bold.title 當前事件：
+        p.bold.title Event
         ul
           li.click Click
           li.hover Hover
           li.doubleclick Double Click
           li.none No Event
       .container.button-group
-        p.bold.title 範圍：
+        p.bold.title Container
         ul
           li.container-inside Inside
           li.container-free Free
 
       //開啟時加上.on   
       .wheel.button-group
-        p.bold.title 滾輪控制：
+        p.bold.title Scale
         ul
-          li.wheel-on 開啟
-          li.wheel-off 關閉
+          li.wheel-on on
+          li.wheel-off off
         .key-combine.button-group
-          p.bold.title 組合鍵：
+          p.bold.title Key-Combine (press "shift")
           ul
-            li.key-on 開啟
-            li.key-off 關閉
+            li.key-on on
+            li.key-off off
     
     .pinch 手機版測試用
     script(src="./js/hammer.min.js")

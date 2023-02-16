@@ -56,7 +56,6 @@ zoom-element .move-element {
           justify-content: center;
   -ms-flex-line-pack: center;
       align-content: center;
-  gap: 30px;
 }
 
 .zoom-plus, .zoom-minus, .zoom-reset {
@@ -68,8 +67,18 @@ zoom-element .move-element {
           box-sizing: border-box;
 }
 
-p, h1 {
+p, h1, h4 {
   margin: 0;
+}
+
+h1 {
+  text-align: center;
+}
+
+h4 {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 20px;
+  text-align: center;
 }
 
 body {
@@ -84,10 +93,7 @@ body {
 }
 @media (max-width: 768px) {
   body {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
+    display: block;
   }
 }
 
@@ -105,8 +111,8 @@ zoom-element {
 }
 
 .move-element {
-  width: 1000px;
-  height: 100%;
+  width: 350px;
+  height: 350px;
 }
 .move-element img {
   position: absolute;
@@ -127,9 +133,11 @@ zoom-element {
 .demo {
   padding: 15px 15px 0;
   max-width: 30%;
+  overflow: visible;
 }
 @media (max-width: 768px) {
   .demo {
+    padding-bottom: 65px;
     max-width: 100%;
   }
 }
@@ -146,6 +154,7 @@ zoom-element {
           align-items: center;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
+  gap: 5%;
   margin-top: 15px;
 }
 .zoom-buttons.off > div {
@@ -163,8 +172,7 @@ zoom-element {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  width: 100%;
-  max-width: 150px;
+  width: 30%;
   height: 60px;
   border-radius: 50px;
   background: rgb(32, 48, 82);
@@ -238,7 +246,7 @@ zoom-element {
 }
 .button-group li {
   padding: 10px;
-  width: 250px;
+  width: calc(50% - 10px);
   text-align: center;
   border-radius: 60px;
   border: 2px solid rgb(32, 48, 82);

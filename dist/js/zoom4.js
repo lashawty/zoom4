@@ -196,9 +196,9 @@ class zoom4 extends HTMLElement {
       el.style.transform = `scale(${this.s.options.correctMinScale})`
       this.s.options.currentScale = this.s.options.correctMinScale
       this.s.options.originalScale = this.s.options.correctMinScale
-
     }
   }
+  
   //如果container是inside 最大倍率=父元素寬高/子元素寬高
   #getInsideCorrectMaxScale() {
     const { correctMaxScale, container, element, elWidthBefore, elHeightBefore, z4Width, z4Height } = this.s.options;
@@ -311,18 +311,20 @@ class zoom4 extends HTMLElement {
     hammertime.on('pinchout', function(ev) {
       currentScale = z4.s.options.currentScale // 當前縮放倍率
       distance = ev.distance //滑動距離
-      scaleAfterZoom = currentScale * (1 + rate * distance * .1)
+      scaleAfterZoom = currentScale * (1 + (rate * distance * .01))
       if (scaleAfterZoom >= correctMaxScale ) scaleAfterZoom = correctMaxScale
       el.style.transform = `scale(${scaleAfterZoom})`
       z4.s.options.currentScale = scaleAfterZoom
+      div.textContent = `雙指縮放 ${pinchObserver} ${distance}`
     });
     hammertime.on('pinchin', function(ev) {
       currentScale = z4.s.options.currentScale // 當前縮放倍率
       distance = ev.distance //滑動距離
-      scaleAfterZoom = currentScale / (1 + rate * distance * .1)
+      scaleAfterZoom = currentScale / (1 + (rate * distance * .01))
       if (scaleAfterZoom <= correctMinScale ) scaleAfterZoom = correctMinScale
       el.style.transform = `scale(${scaleAfterZoom})`
       z4.s.options.currentScale = scaleAfterZoom
+      div.textContent = `雙指縮放 ${pinchObserver} ${distance}`
     });
     hammertime.on('pinchend', function (ev) {
       pinchObserver = false
