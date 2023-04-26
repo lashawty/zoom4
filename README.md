@@ -1,5 +1,5 @@
 # ZOOM 4 Demo
-[Demo 連結](https://xwadex.com/_pvd_/@WDD-F2E/zoom4/index.html)
+[Demo 連結](https://xwadex.com/@vvd/@WDD-F2E/zoom4/index.html)
 ###### tags: zoom4
 
 ![](https://i.imgur.com/dPu9pG2.png)
